@@ -1,6 +1,6 @@
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { rankWith, ControlProps, isBooleanControl } from "@jsonforms/core";
-import { withIdProp } from "@/components/withIdProp";
+import { withIdProp } from "@/components/renderers/withIdProp";
 
 interface CheckboxControlProps extends ControlProps {
 }

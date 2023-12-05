@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import { JsonFormsDispatch, withJsonFormsLayoutProps } from '@jsonforms/react';
 import { isLayout, LayoutProps, rankWith, uiTypeIs } from '@jsonforms/core';
-import { StrictStatePropsOfRenderer } from "@/components/types";
+import { StrictStatePropsOfRenderer } from "@/components/renderers/types";
 
 export const layoutTester = rankWith(10, uiTypeIs('Layout'));
 

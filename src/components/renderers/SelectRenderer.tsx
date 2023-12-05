@@ -1,8 +1,7 @@
 import React, { useId } from "react";
 import { DispatchCell, withJsonFormsControlProps } from '@jsonforms/react';
 import { rankWith, isStringControl, ControlProps, uiTypeIs } from "@jsonforms/core";
-import { withIdProp } from "@/components/withIdProp";
-import { valueOf } from "clsx";
+import { withIdProp } from "@/components/renderers/withIdProp";
 
 interface SelectControlProps extends ControlProps {
 }

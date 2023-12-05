@@ -1,7 +1,7 @@
 import React, { useId } from "react";
 import { DispatchCell, withJsonFormsControlProps } from '@jsonforms/react';
 import { rankWith, isStringControl, ControlProps, uiTypeIs } from "@jsonforms/core";
-import { withIdProp } from "@/components/withIdProp";
+import { withIdProp } from "@/components/renderers/withIdProp";
 
 interface InputControlProps extends ControlProps {
   onBlur: () => void;
