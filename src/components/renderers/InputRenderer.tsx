@@ -1,61 +1,52 @@
 import React, { useId } from "react";
-import { DispatchCell, withJsonFormsControlProps } from '@jsonforms/react';
-import { rankWith, isStringControl, ControlProps, uiTypeIs } from "@jsonforms/core";
-import { withIdProp } from "@/components/renderers/withIdProp";
+import { withJsonFormsControlProps } from '@jsonforms/react';
+import { rankWith, ControlProps, uiTypeIs } from "@jsonforms/core";
+// import { withIdProp } from "@/components/renderers/withIdProp";
+// import { AriaTextFieldProps, useFocusRing, useHover, useTextField, mergeProps } from "react-aria";
+import { clsx } from "clsx";
 
-interface InputControlProps extends ControlProps {
-  onBlur: () => void;
-  touched: boolean;
-}
+import {TextField, Label, Input, Text, FieldError} from 'react-aria-components';
+import { useShowErrors } from "@/components/renderers/useShowErrors";
 
-const InputControl = (props: InputControlProps) => {
+const InputControl = (props: ControlProps) => {
   const {
     handleChange,
     path,
-    id,
     enabled,
     visible,
     label,
     data,
     errors,
     required,
-    schema,
     uischema,
-    rootSchema,
-    cells,
-    renderers,
     config,
-    i18nKeyPrefix,
     description,
-    onBlur,
-    touched
   } = props;
 
-  const controlId = useId();
+  const { isInvalid, onBlur } = useShowErrors(errors, config);
 
   return (
-    <div className="flex gap-2" onBlur={() => console.log('blur')} onFocus={() => console.log('focus')}>
+    <TextField
+      className="flex gap-4"
+      isInvalid={isInvalid}
+      value={data ?? ''}
+      name={path}
+      type={uischema.options?.type ?? 'text'}
+      onChange={(value) => handleChange(path, value === '' ? undefined : value)}
+      onBlur={onBlur}
+    >
       {label && (
-        <label htmlFor={id} className="whitespace-nowrap">{label}</label>
+        <Label>{label}</Label>
       )}
-      <input
-        id={id}
-        name={path}
-        className="border"
-        type={uischema.options?.type ?? 'text'}
-        onBlur={onBlur}
-        onChange={e => handleChange(path, e.target.value === '' ? undefined : e.target.value)}
-        value={data ?? ''}
-      />
-      {(touched || config.touched) && (
-        <div>
-          {JSON.stringify(errors)}
-        </div>
-      )}
-    </div>
+      <Input className="border data-[focused]:ring" />
+      {description && <Text slot="description">{description}</Text>}
+      <FieldError>
+        {errors}
+      </FieldError>
+    </TextField>
   );
 };
 
-export const InputRenderer = withJsonFormsControlProps(withIdProp(InputControl));
+export const InputRenderer = withJsonFormsControlProps(InputControl);
 
 export const inputTester = rankWith(10, uiTypeIs('InputControl'));

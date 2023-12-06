@@ -2,6 +2,8 @@ import React, { useId } from "react";
 import { DispatchCell, withJsonFormsControlProps } from '@jsonforms/react';
 import { rankWith, isStringControl, ControlProps, uiTypeIs } from "@jsonforms/core";
 import { withIdProp } from "@/components/renderers/withIdProp";
+import { useShowErrors } from "@/components/renderers/useShowErrors";
+import { Button, Label, ListBox, ListBoxItem, Popover, Select, SelectValue } from "react-aria-components";
 
 interface SelectControlProps extends ControlProps {
 }
@@ -25,39 +27,38 @@ const SelectControl = (props: SelectControlProps) => {
     config,
     i18nKeyPrefix,
     description,
-    onBlur,
-    touched
   } = props;
 
-  const controlId = useId();
+  const { isInvalid, onBlur } = useShowErrors(errors, config);
 
   return (
-    <div className="flex gap-2">
+    <Select
+      className="flex gap-4"
+      isInvalid={isInvalid}
+      selectedKey={data ?? ''}
+      name={path}
+      onSelectionChange={(key) => handleChange(path, key)}
+      onBlur={onBlur}
+    >
       {label && (
-        <label htmlFor={id} className="whitespace-nowrap">{label}</label>
+        <Label>{label}</Label>
       )}
-      <select
-        id={id}
-        name={path}
-        className="border"
-        onChange={e => handleChange(path, e.target.selectedIndex === 0 ? undefined : e.target.value)}
-        onBlur={onBlur}
-        value={data}
-      >
-        <option value=""/>
-        {schema.oneOf?.map(item => (
-          <option key={item.const} value={item.const}>{item.title}</option>
-        ))}
-      </select>
-      {(touched || config.touched) && (
-        <div>
-          {JSON.stringify(errors)}
-        </div>
-      )}
-    </div>
+      <Button>
+        <SelectValue />
+        <span aria-hidden="true">▼</span>
+      </Button>
+      <Popover>
+        <ListBox>
+          <ListBoxItem id="">{' '}</ListBoxItem>
+          {schema.oneOf?.map(item => (
+            <ListBoxItem key={item.const} id={item.const}>{item.title}</ListBoxItem>
+          ))}
+        </ListBox>
+      </Popover>
+    </Select>
   );
 };
 
-export const SelectRenderer = withJsonFormsControlProps(withIdProp(SelectControl));
+export const SelectRenderer = withJsonFormsControlProps(SelectControl);
 
 export const selectTester = rankWith(10, uiTypeIs('SelectControl'));
